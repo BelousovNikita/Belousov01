@@ -2,6 +2,12 @@
 
 #define N 255
 
+void swap(int *first, int *second) {
+    int temp = *first;
+    *first = *second;
+    *second = temp;
+}
+
 int main() {
     int a, b;
     int arr[N][N];
@@ -13,7 +19,8 @@ int main() {
     for (int i = 0; i < b; i++) {
         for (int j = 0; j < a; j++) {
             scanf("%d", &arr[i][j]);
-            if (arr[i][j] < 0 && arr[i][j] % 2 != 0) char_arr[j] += arr[i][j];
+            if (arr[i][j] < 0 && arr[i][j] % 2 != 0)
+                char_arr[j] += arr[i][j];
         }
     }
     int ans[N][N];
@@ -26,13 +33,8 @@ int main() {
     for (int t = 0; t < a; t++) {
         for (int i = 0; i < a - 1; i++) {
             if (char_arr[i + 1] < char_arr[i]) {
-                int temp = char_arr[i + 1];
-                char_arr[i + 1] = char_arr[i];
-                char_arr[i] = temp;
-
-                temp = ind[i];
-                ind[i] = ind[i + 1];
-                ind[i + 1] = temp;
+                swap(&char_arr[i], &char_arr[i + 1]);
+                swap(&ind[i], &ind[i + 1]);
             }
         }
     }
