@@ -1,52 +1,91 @@
 #include <stdio.h>
-#define N 255
+#include <malloc.h>
+#include <string.h>
 
-int main()
+typedef struct _human {
+    int ost;
+    char* name;
+} Human;
+
+typedef struct _Stack {
+    Human* data;
+    struct _Stack* next;
+} Stack;
+
+Stack* push2Stack(Stack* root, char* aname, int aost)
 {
-    int a, b;
-    int arr[N][N];
-    int chararr[N];
-    scanf ("%d %d", &a, &b);
-    for(int i = 0; i < a; ++i)
+    if (root == NULL)
     {
-        chararr[i] = 0;
+        root = (Stack*) malloc(sizeof(Stack));
+        root->data = NULL;
+        root->data = (Human*) malloc(sizeof(Human));
+        root->data->name = (char*) malloc(256 * sizeof(char));
+        strcpy(root->data->name, aname);
+        root->data->ost = aost;
+        root->next = NULL;
+        return root;
     }
-    for (int i=0; i<b; i++)
+    Stack* temp = root;
+    root = NULL;
+    root = push2Stack(root, aname, aost);
+    root->next = temp;
+    return root;
+}
+
+Human* popFromStack(Stack** root)
+{
+    if (*root == NULL) return NULL;
+    Stack* temp = (*root)->next;
+    Human* res = (*root)->data;
+    (*root)->data = NULL;
+    (*root)->next = NULL;
+    free(*root);
+    *root = temp;
+    return res;
+}
+
+int main() {
+    FILE *input, *output;
+    int n, svoya = 0, konechnaya = 0;
+    input = fopen("input.txt", "r");
+    if (input == NULL)
     {
-        for (int j = 0; j < a; j++)
-        {
-            int temp;
-            scanf("%d", &temp);
-            arr[i][j] = temp;
-            if (temp < 0 && temp & 1) chararr[j] += temp;
-        }
+        return 1;
     }
-    for(int k = 0; k < a - 1; ++k)
-    {
-        for(int i = 0; i < a - k; ++i)
-        {
-            if (chararr[i] > chararr[i + 1]) {
-                for (int j = 0; j < b; ++j) {
-                    int el = arr[j][i];
-                    arr[j][i] = arr[j][i + 1];
-                    arr[j][i + 1] = el;
-                }
-                int temp = chararr[i];
-                chararr[i] = chararr[i + 1];
-                chararr[i + 1] = temp;
+    output = fopen("output.txt", "w");
+    fscanf(input, "%d ", &n);
+    int read_ost = -1;
+    char* str = (char*) malloc(256 * sizeof(char));
+
+    Stack* root = NULL;
+    Human* first = NULL;
+    for(int i = 0; i < n; i++) {
+        while((first = popFromStack(&root))){
+            if (first->ost <= i) {
+                if (first->ost == i) svoya++;
+                if (i == n - 1) konechnaya++;
+                fprintf(output, "%s\n", first->name);
+                free(first->name);
+                free(first);
+            }
+            else
+            {
+                root = push2Stack(root, first->name, first->ost);
+                free(first->name);
+                break;
             }
         }
-    }
-    for (int i=0; i<b; i++)
-    {
-        for (int j = 0; j < a; j++)
-        {
-            printf("%d ", arr[i][j]);
+        int num;
+        fscanf(input, "%d", &num);
+        for(int j = 0; j < num; j++) {
+            fscanf(input, "%s", str);
+            fscanf(input, "%d", &read_ost);
+            root = push2Stack(root, str, read_ost);
         }
-        printf("\n");
     }
-    printf("%d %d", chararr[0], chararr[a - 1]);
+    fprintf(output, "%d %d", svoya, konechnaya);
 
-
+    fclose(input);
+    fclose(output);
     return 0;
 }
