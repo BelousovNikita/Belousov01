@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
 
-#define N 100
-
 int inverse(int num) {
     return num == 1 ? 2 : 1;
 }
@@ -29,7 +27,6 @@ int main() {
         printf("File not found");
         return 1;
     }
-//    int Adjacency_Ma/trix[N][N] = {0};
     int v, r;
     int Red = 0, Blue = 0;
     fscanf(input, "%d %d", &v, &r);
