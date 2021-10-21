@@ -8,103 +8,86 @@ ifstream fin("input.txt");
 ofstream fout("output.txt");
 
 class Complex{
-    double a, b;
+    double Re, Im;
 
 public:
-    Complex()
+    Complex(): Re(1), Im (0)
     {
-        this->a = 1;
-        this->b = 0;
     }
 
-    Complex(const double a, const double b)
+    Complex(const double a, const double b): Re(a), Im(b)
     {
-        this->a = a;
-        this->b = b;
-    }
-
-    Complex(const Complex &complex)
-    {
-        this->a = complex.a;
-        this->b = complex.b;
     }
 
     Complex operator+(const Complex &other)
     {
-        return Complex(a + other.a, b + other.b);
+        return Complex(Re + other.Re, Im + other.Im);
     }
 
-    Complex operator+(const double &scalar)
+    Complex operator+(const double scalar)
     {
         return *this + Complex(scalar, 0);
     }
 
     Complex operator-(const Complex &other)
     {
-        return Complex(a - other.a, b - other.b);
+        return Complex(Re - other.Re, Im - other.Im);
     }
 
-    Complex operator-(const double &scalar)
+    Complex operator-(const double scalar)
     {
         return *this - Complex(scalar, 0);
     }
 
     Complex operator*(const Complex &other)
     {
-        return Complex(a * other.a - b * other.b, a * other.b + other.a * b);
+        return Complex(Re * other.Re - Im * other.Im, Re * other.Im + other.Re * Im);
     }
 
-    Complex operator*(const double &scalar)
+    Complex operator*(const double scalar)
     {
         return *this * Complex(scalar, 0);
     }
 
     Complex operator/(const Complex &other)
     {
-        return Complex((other.a * a + b * other.b) / (pow(other.a, 2) + pow(other.b, 2)),
-                       (other.a * b - a * other.b) / (pow(other.a, 2) + pow(other.b, 2)));
+        return Complex((other.Re * Re + Im * other.Im) / (pow(other.Re, 2) + pow(other.Im, 2)),
+                       (other.Re * Im - Re * other.Im) / (pow(other.Re, 2) + pow(other.Im, 2)));
     }
 
-    Complex operator/(const double &scalar)
+    Complex operator/(const double scalar)
     {
         return *this / Complex(scalar, 0);
     }
 
     bool operator==(const Complex &other)
     {
-        return (a == other.a && b == other.b);
+        return (Re == other.Re && Im == other.Im);
     }
-
 
     bool operator!=(const Complex &other)
     {
-        return (a != other.a && b != other.b);
-    }
-
-    Complex &operator=(const Complex &other){
-        this->a = a;
-        this->b = b;
-        return *this;
+        return (Re != other.Re && Im != other.Im);
     }
 
     double abs()
     {
-        return sqrt(pow(a, 2) + pow(b, 2));
+        return sqrt(pow(Re, 2) + pow(Im, 2));
     }
 
     void print()
     {
-        if (b >= 0)
+        if (Im >= 0)
         {
-            fout << fixed << setprecision(2) << a << "+i*" << b;
+            fout << fixed << setprecision(2) << Re << "+i*" << Im;
         } else {
-            fout << fixed << setprecision(2) << a << "-i*" << -b;
+            fout << fixed << setprecision(2) << Re << "-i*" << -Im;
         }
     }
 
     void read()
     {
-        fin >> a >> b;
+        fin >> Re >> Im;
     }
 };
 
