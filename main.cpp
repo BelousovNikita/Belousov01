@@ -21,12 +21,18 @@ public:
     Disjunction(Equation *R, Equation *L) : R(R), L(L) {
     }
 
+    ~Disjunction()
+    {
+        delete R;
+        delete L;
+    }
+
     double principalRoot() {
         double res;
         if (abs(R->principalRoot()) < abs(L->principalRoot()))
             res = (R->principalRoot());
         else if (abs(R->principalRoot()) == abs(L->principalRoot()))
-            res = max((R->principalRoot()), abs(L->principalRoot()));
+            res = abs(R->principalRoot());
         else (res = (L->principalRoot()));
         return res;
     }
@@ -68,7 +74,7 @@ int main() {
     int N;
     fin >> N;
     char type;
-    double a = 0, b = 0, k = 0, sum = 0;
+    double a = 0, b = 0, k = 0;
     Equation *tempr = nullptr;
     Equation *templ = nullptr;
     for (int i = 0; i < N; i++) {
