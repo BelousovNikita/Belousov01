@@ -30,7 +30,7 @@ public:
 
     ~Operation() = default;
 
-    void Adding (char operation, int prior, char L_R)
+    void add (char operation, int prior, char L_R)
     {
         priority[operation] = prior;
         associativity[operation] = L_R;
@@ -43,13 +43,13 @@ public:
 
     bool get_associativity (char operation)
     {
-        return associativity[operation] == 'L' ? true : false;
+        return associativity[operation] == 'L';
     }
 };
 
 Symbols get_type (char symbol)
 {
-    if ((symbol <= '9') and (symbol >= '0'))
+    if (isdigit(symbol))
     {
         return Numbers;
     } else if (symbol == '+' or symbol == '-' or symbol == '*' or symbol == '/')
@@ -67,7 +67,7 @@ Symbols get_type (char symbol)
     }
 }
 
-bool sort (queue <char>* out, Operation* operation)
+bool sort (queue <char>& out, Operation& operation)
 {
     stack <char> Stack;
     char symbol;
@@ -82,7 +82,7 @@ bool sort (queue <char>* out, Operation* operation)
         {
             case Numbers:
             {
-                out -> push(symbol);
+                out.push(symbol);
                 break;
             }
             case Operations:
@@ -90,9 +90,9 @@ bool sort (queue <char>* out, Operation* operation)
                 while (!Stack.empty())
                 {
                     temp = Stack.top();
-                    if ((get_type(temp) == Operations) and ((operation -> get_associativity(symbol)) and (operation -> get_priority(temp) >= operation -> get_priority(symbol))) or ((!operation -> get_associativity(symbol)) and (operation -> get_priority(temp) > operation->get_priority((symbol)))))
+                    if ((get_type(temp) == Operations) and ((operation.get_associativity(symbol)) and (operation.get_priority(temp) >= operation.get_priority(symbol))) or ((!operation.get_associativity(symbol)) and (operation.get_priority(temp) > operation.get_priority((symbol)))))
                     {
-                        out -> push (temp);
+                        out.push (temp);
                         Stack.pop();
                     } else
                     {
@@ -117,7 +117,7 @@ bool sort (queue <char>* out, Operation* operation)
                         break;
                     } else
                     {
-                        out -> push(temp);
+                        out.push(temp);
                         Stack.pop();
                     }
                 }
@@ -132,7 +132,7 @@ bool sort (queue <char>* out, Operation* operation)
     }
     while (!Stack.empty())
     {
-        out -> push(Stack.top());
+        out.push(Stack.top());
         Stack.pop();
     }
     return true;
@@ -224,10 +224,10 @@ int main()
         fin >> operation;
         fin >> priority;
         fin >> associativity;
-        oper.Adding(operation, priority, associativity);
+        oper.add(operation, priority, associativity);
     }
 
-    if (sort(&output, &oper))
+    if (sort(output, oper))
     {
         try
         {
